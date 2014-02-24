@@ -53,6 +53,12 @@ App.TodoController = Ember.ObjectController.extend({
   }.property('model.isDone'),
 
   actions: {
+    removeTodo: function() {
+      var todo = this.get('model');
+      todo.deleteRecord();
+      todo.save();
+    },
+
     editTodo: function() {
       this.set('isEditing', true);
     },
