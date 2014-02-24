@@ -13,6 +13,15 @@ App.TodosRoute = Ember.Route.extend({
 
 // === CONTROLLERS ===
 App.TodosController = Ember.ArrayController.extend({
+
+  remaining: function() {
+    return this.filterBy('isDone', false).get('length');
+  }.property('@each.isDone'),
+
+  inflection: function() {
+    return this.get('remaining') === 1 ? 'item' : 'items';
+  }.property('remaining'),
+
   actions: {
     createTodo: function() {
       var title = this.get('newTitle');
