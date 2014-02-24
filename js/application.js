@@ -11,6 +11,36 @@ App.TodosRoute = Ember.Route.extend({
   }
 });
 
+// === CONTROLLERS ===
+App.TodosController = Ember.ArrayController.extend({
+  actions: {
+    createTodo: function() {
+      var title = this.get('newTitle');
+      if (!title.trim()) { return; }
+      var todo = this.store.createRecord('todo', {
+        title: title,
+        isDone: false
+      });
+      this.set('newTitle', '');
+      todo.save();
+    }
+  }
+});
+
+App.TodoController = Ember.ObjectController.extend({
+  isDone: function(key, value){
+    var model = this.get('model');
+
+    if (value === undefined) {
+      return model.get('isDone');
+    } else {
+      model.set('isDone', value);
+      model.save();
+      return value;
+    }
+  }.property('model.isDone')
+});
+
 // === MODELS ===
 App.ApplicationAdapter = DS.FixtureAdapter.extend();
 
