@@ -22,11 +22,18 @@
     <section id="main">
       <ul id="todo-list">
         {{#each itemController="todo"}}
-          <li {{bind-attr class="isDone:completed"}}>
-            {{input type="checkbox"
-                    checked=isDone
-                    class="toggle"}}
-            <label>{{title}}</label><button class="destroy"></button>
+          <li {{bind-attr class="isDone:completed isEditing:editing"}}>
+            {{#if isEditing}}
+              {{edit-todo class="edit"
+                          value=title
+                          focus-out="acceptChanges"
+                          insert-newline="acceptChanges"}}
+            {{else}}
+              {{input type="checkbox"
+                      checked=isDone
+                      class="toggle"}}
+              <label {{action "editTodo" on="doubleClick"}}>{{title}}</label><button class="destroy"></button>
+            {{/if}}
           </li>
         {{/each}}
       </ul>
@@ -36,7 +43,7 @@
 
     <footer id="footer">
       <span id="todo-count">
-        <strong>2</strong> todos left
+        <strong>{{remaining}}</strong> {{inflection}} left
       </span>
       <ul id="filters">
         <li>
