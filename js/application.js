@@ -37,6 +37,9 @@ App.TodosController = Ember.ArrayController.extend({
 });
 
 App.TodoController = Ember.ObjectController.extend({
+
+  isEditing: false,
+
   isDone: function(key, value){
     var model = this.get('model');
 
@@ -47,8 +50,33 @@ App.TodoController = Ember.ObjectController.extend({
       model.save();
       return value;
     }
-  }.property('model.isDone')
+  }.property('model.isDone'),
+
+  actions: {
+    editTodo: function() {
+      this.set('isEditing', true);
+    },
+
+    acceptChanges: function() {
+      this.set('isEditing', false);
+      if (Ember.isEmpty(this.get('model.title'))) {
+        this.send('removeTodo');
+      } else {
+        this.get('model').save();
+      }
+    }
+  }
 });
+
+// === VIEWS ===
+App.EditTodoView = Ember.TextField.extend({
+  didInsertElement: function() {
+    this.$().focus();
+  }
+});
+
+// === HELPERS ===
+Ember.Handlebars.helper('edit-todo', App.EditTodoView);
 
 // === MODELS ===
 App.ApplicationAdapter = DS.FixtureAdapter.extend();
