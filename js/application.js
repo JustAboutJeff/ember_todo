@@ -45,6 +45,16 @@ App.TodosDoneRoute = Ember.Route.extend({
 // === CONTROLLERS ===
 App.TodosController = Ember.ArrayController.extend({
 
+  allAreDone: function(key,val) {
+    if (val === undefined) {
+      return !!this.get('length') && this.everyProperty('isDone',true);
+    } else {
+      this.setEach('isDone',val);
+      this.invoke('save');
+      return val;
+    }
+  }.property('@each.isDone'),
+
   hasDone: function() {
     return this.get('done') > 0;
   }.property('done'),
