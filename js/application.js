@@ -45,6 +45,14 @@ App.TodosDoneRoute = Ember.Route.extend({
 // === CONTROLLERS ===
 App.TodosController = Ember.ArrayController.extend({
 
+  hasDone: function() {
+    return this.get('done') > 0;
+  }.property('done'),
+
+  done: function() {
+    return this.filterBy('isDone', true).get('length');
+  }.property('@each.isDone'),
+
   remaining: function() {
     return this.filterBy('isDone', false).get('length');
   }.property('@each.isDone'),
@@ -63,6 +71,12 @@ App.TodosController = Ember.ArrayController.extend({
       });
       this.set('newTitle', '');
       todo.save();
+    },
+    clearDone: function() {
+      this.filterBy('isDone',true).forEach( function(t) {
+        t.deleteRecord();
+        t.save();
+      });
     }
   }
 });
